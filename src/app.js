@@ -13,6 +13,10 @@ app.use(helmet());
 
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.send("Student Management API is running 🚀");
+});
+
 app.use("/api/students", studentRoutes);
 
 app.use("/api/users", userRouter);
