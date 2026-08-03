@@ -87,7 +87,7 @@ router.post(
  */
 router.post(
   "/login",
-  authLimiter,
+  //authLimiter,
   validate(loginUserSchema),
   loginUserController,
 );
