@@ -57,13 +57,19 @@ export async function deleteStudentById(id) {
 export async function getAllStudent(page, limit, search = "") {
   const offset = (page - 1) * limit;
   const studentQuery = `
-  SELECT *
-  FROM student
-  WHERE first_name ILIKE $1
-  OR last_name ILIKE $1
-  ORDER BY id
-  LIMIT $2 OFFSET $3
-  `;
+SELECT *
+FROM student
+WHERE
+    first_name ILIKE $1
+ OR last_name ILIKE $1
+ OR email ILIKE $1
+ OR phone_no ILIKE $1
+ OR course_title ILIKE $1
+ OR semester::TEXT ILIKE $1
+ OR enrollment_at::TEXT ILIKE $1
+ORDER BY id
+LIMIT $2 OFFSET $3
+`;
 
   const studentResult = await pool.query(studentQuery, [
     `%${search}%`,
@@ -71,17 +77,17 @@ export async function getAllStudent(page, limit, search = "") {
     offset,
   ]);
 
-  // const totalQuery = `
-  // SELECT *
-  // FROM student
-  // WHERE first_name ILIKE $1
-  // OR last_name ILIKE $1
-  // `;
   const totalQuery = `
-  SELECT COUNT(*) AS count
-  FROM student
-  WHERE first_name ILIKE $1
-  OR last_name ILIKE $1
+SELECT COUNT(*) AS count
+FROM student
+WHERE
+    first_name ILIKE $1
+ OR last_name ILIKE $1
+ OR email ILIKE $1
+ OR phone_no ILIKE $1
+ OR course_title ILIKE $1
+ OR semester::TEXT ILIKE $1
+ OR enrollment_at::TEXT ILIKE $1
 `;
 
   const totalResult = await pool.query(totalQuery, [`%${search}%`]);
