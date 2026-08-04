@@ -71,12 +71,18 @@ export async function getAllStudent(page, limit, search = "") {
     offset,
   ]);
 
+  // const totalQuery = `
+  // SELECT *
+  // FROM student
+  // WHERE first_name ILIKE $1
+  // OR last_name ILIKE $1
+  // `;
   const totalQuery = `
-  SELECT * 
-  FROM student 
+  SELECT COUNT(*) AS count
+  FROM student
   WHERE first_name ILIKE $1
   OR last_name ILIKE $1
-  `;
+`;
 
   const totalResult = await pool.query(totalQuery, [`%${search}%`]);
 
