@@ -65,8 +65,8 @@ WHERE
  OR email ILIKE $1
  OR phone_no ILIKE $1
  OR course_title ILIKE $1
- OR semester::TEXT ILIKE $1
- OR enrollment_at::TEXT ILIKE $1
+ OR TRIM(semester) ILIKE $1
+ OR TO_CHAR(enrollment_at, 'DD-MM-YYYY') ILIKE $1
 ORDER BY id
 LIMIT $2 OFFSET $3
 `;
@@ -86,8 +86,8 @@ WHERE
  OR email ILIKE $1
  OR phone_no ILIKE $1
  OR course_title ILIKE $1
- OR semester::TEXT ILIKE $1
- OR enrollment_at::TEXT ILIKE $1
+ OR TRIM(semester) ILIKE $1
+ OR TO_CHAR(enrollment_at, 'DD-MM-YYYY') ILIKE $1
 `;
 
   const totalResult = await pool.query(totalQuery, [`%${search}%`]);
