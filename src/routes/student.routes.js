@@ -93,6 +93,7 @@ router.put("/:id", updateStudentController);
  *       200:
  *         description: Student deleted successfully
  */
-router.delete("/:id", protect, authorize("admin"), deleteStudentByIdController);
+// router.delete("/:id", protect, authorize("admin"), deleteStudentByIdController);
+router.delete("/:id", deleteStudentByIdController);
 
 export default router;
