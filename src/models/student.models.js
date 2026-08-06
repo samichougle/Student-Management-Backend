@@ -27,10 +27,30 @@ export async function getStudentById(id) {
 }
 
 export async function updateStudent(id, studentData) {
-  const { first_name, last_name, email, phone_no, course_title, semester } =
-    studentData;
+  const {
+    first_name,
+    last_name,
+    email,
+    phone_no,
+    course_title,
+    semester,
+    enrollment_at,
+  } = studentData;
 
-  const query = `UPDATE student SET first_name = $1, last_name = $2, email = $3, phone_no = $4, course_title = $5, semester = $6 WHERE id = $7 RETURNING *`;
+  const query = `
+    UPDATE student
+    SET
+      first_name = $1,
+      last_name = $2,
+      email = $3,
+      phone_no = $4,
+      course_title = $5,
+      semester = $6,
+      enrollment_at = $7
+    WHERE id = $8
+    RETURNING *;
+  `;
+
   const values = [
     first_name,
     last_name,
@@ -38,6 +58,7 @@ export async function updateStudent(id, studentData) {
     phone_no,
     course_title,
     semester,
+    enrollment_at,
     id,
   ];
 
