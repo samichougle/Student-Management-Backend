@@ -8,7 +8,7 @@ import {
 
 export async function createStudentService(studentData) {
   try {
-    const student = createStudent(studentData);
+    const student = await createStudent(studentData);
     return student;
   } catch (error) {
     throw new Error("Error while creating student: " + error.message);

@@ -1,10 +1,30 @@
 import pool from "../db/db.js";
 
 export async function createStudent(studentData) {
-  const { first_name, last_name, email, phone_no, course_title, semester } =
-    studentData;
+  const {
+    first_name,
+    last_name,
+    email,
+    phone_no,
+    course_title,
+    semester,
+    enrollment_at,
+  } = studentData;
 
-  const query = `INSERT INTO student (first_name, last_name, email, phone_no, course_title, semester) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`;
+  const query = `
+    INSERT INTO student (
+      first_name,
+      last_name,
+      email,
+      phone_no,
+      course_title,
+      semester,
+      enrollment_at
+    )
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
+    RETURNING *
+  `;
+
   const values = [
     first_name,
     last_name,
@@ -12,6 +32,7 @@ export async function createStudent(studentData) {
     phone_no,
     course_title,
     semester,
+    enrollment_at,
   ];
 
   const result = await pool.query(query, values);

@@ -5,15 +5,33 @@ import {
   updateStudentService,
   deleteStudentByIdService,
 } from "../services/student.services.js";
+
 import asyncHandler from "../utils/asyncHandler.js";
+
+const VALID_SEMESTERS = [
+  "Semester 1",
+  "Semester 2",
+  "Semester 3",
+  "Semester 4",
+  "Graduate",
+];
 
 export const createStudentController = asyncHandler(async (req, res) => {
   const studentData = req.body;
 
+  // Validate semester
+  if (!VALID_SEMESTERS.includes(studentData.semester)) {
+    return res.status(400).json({
+      success: false,
+      message:
+        "Invalid semester. Please select Semester 1, Semester 2, Semester 3, Semester 4, or Graduate.",
+    });
+  }
+
   const student = await createStudentService(studentData);
 
   return res.status(201).json({
-    sucess: true,
+    success: true,
     message: "Student created successfully",
     data: student,
   });
@@ -40,13 +58,16 @@ export const getAllStudentsController = asyncHandler(async (req, res) => {
 
 export const getStudentByIdController = asyncHandler(async (req, res) => {
   const studentId = req.params.id;
+
   const student = await getStudentByIdService(studentId);
+
   if (!student) {
     return res.status(404).json({
       success: false,
       message: "Student not found",
     });
   }
+
   return res.status(200).json({
     success: true,
     message: "Student fetched successfully",
@@ -57,6 +78,15 @@ export const getStudentByIdController = asyncHandler(async (req, res) => {
 export const updateStudentController = asyncHandler(async (req, res) => {
   const studentId = req.params.id;
   const studentData = req.body;
+
+  // Validate semester
+  if (!VALID_SEMESTERS.includes(studentData.semester)) {
+    return res.status(400).json({
+      success: false,
+      message:
+        "Invalid semester. Please select Semester 1, Semester 2, Semester 3, Semester 4, or Graduate.",
+    });
+  }
 
   const student = await updateStudentService(studentId, studentData);
 
@@ -69,16 +99,19 @@ export const updateStudentController = asyncHandler(async (req, res) => {
 
 export const deleteStudentByIdController = asyncHandler(async (req, res) => {
   const studentId = req.params.id;
+
   const student = await deleteStudentByIdService(studentId);
+
   if (!student) {
     return res.status(404).json({
       success: false,
       message: "Student not found",
     });
   }
+
   return res.status(200).json({
     success: true,
-    message: "Student fetched successfully",
+    message: "Student deleted successfully",
     data: student,
   });
 });
