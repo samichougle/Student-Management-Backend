@@ -25,10 +25,26 @@ export const registerUserController = asyncHandler(async (req, res) => {
 export const loginUserController = asyncHandler(async (req, res) => {
   const result = await loginUserService(req.body);
 
+  res.cookie("accessToken", result.accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 15 * 60 * 1000,
+  });
+
+  res.cookie("refreshToken", result.refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+
   return res.status(200).json({
     success: true,
     message: "Login Successful",
-    data: result,
+    data: {
+      user: result.user,
+    },
   });
 });
 
@@ -63,17 +79,28 @@ export const resetPasswordController = asyncHandler(async (req, res) => {
 });
 
 export const refreshTokenController = asyncHandler(async (req, res) => {
-  const { refreshToken } = req.body;
+  const refreshToken = req.cookies.refreshToken;
+
   const result = await refreshTokenService(refreshToken);
+
+  res.cookie("accessToken", result.accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 15 * 60 * 1000,
+  });
+
   return res.status(200).json({
     success: true,
     message: "Access token generated successfully.",
-    data: result,
   });
 });
 
 export const logoutController = asyncHandler(async (req, res) => {
   const result = await logoutService(req.user.id);
+
+  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken");
 
   return res.status(200).json({
     success: true,

@@ -6,7 +6,7 @@ import helmet from "helmet";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./config/swagger.js";
 import cors from "cors";
-
+import cookieParser from "cookie-parser";
 const app = express();
 
 app.use(helmet());
@@ -19,6 +19,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
   res.send("Student Management API is running 🚀");
