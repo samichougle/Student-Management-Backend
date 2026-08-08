@@ -40,24 +40,46 @@ export async function getDashboardStats() {
       AND enrollment_at < DATE_TRUNC('month', CURRENT_DATE)
   `;
 
+  const admissionsQuery = `
+    SELECT
+      TO_CHAR(months.month, 'Mon') AS month,
+      COUNT(student.enrollment_at) AS admissions
+    FROM generate_series(
+      DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '6 months',
+      DATE_TRUNC('month', CURRENT_DATE),
+      INTERVAL '1 month'
+    ) AS months(month)
+
+    LEFT JOIN student
+      ON student.enrollment_at >= months.month
+      AND student.enrollment_at < months.month + INTERVAL '1 month'
+
+    GROUP BY months.month
+    ORDER BY months.month
+  `;
+
   const [
     totalStudentsResult,
     totalCoursesResult,
     semesterResult,
     currentMonthResult,
     previousMonthResult,
+    admissionsResult,
   ] = await Promise.all([
     pool.query(totalStudentsQuery),
     pool.query(totalCoursesQuery),
     pool.query(semesterQuery),
     pool.query(currentMonthQuery),
     pool.query(previousMonthQuery),
+    pool.query(admissionsQuery),
   ]);
 
   const totalStudents = Number(totalStudentsResult.rows[0].count);
+
   const totalCourses = Number(totalCoursesResult.rows[0].count);
 
   const currentMonth = Number(currentMonthResult.rows[0].count);
+
   const previousMonth = Number(previousMonthResult.rows[0].count);
 
   let growth = 0;
@@ -70,13 +92,23 @@ export async function getDashboardStats() {
 
   return {
     totalStudents,
+
     totalCourses,
+
     currentMonth,
+
     previousMonth,
+
     growth: Number(growth.toFixed(1)),
+
     semesters: semesterResult.rows.map((row) => ({
       semester: row.semester,
       count: Number(row.count),
+    })),
+
+    admissions: admissionsResult.rows.map((row) => ({
+      month: row.month,
+      admissions: Number(row.admissions),
     })),
   };
 }
