@@ -7,6 +7,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./config/swagger.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import dashboardRoutes from "./routes/dashboard.routes.js";
 const app = express();
 
 app.use(helmet());
@@ -26,6 +27,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/students", studentRoutes);
+
+app.use("/api/dashboard", dashboardRoutes);
 
 app.use("/api/users", userRouter);
 
