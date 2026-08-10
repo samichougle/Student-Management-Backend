@@ -51,10 +51,4 @@ Most importantly, I learned how to **structure and organize a larger project ins
 
 **Paused — Learning Project**
 
-This project was intentionally created for learning rather than as a production application.
-
-After completing the main learning objectives, I decided not to spend additional time polishing and expanding the project. I wanted to use that time to explore other areas of development, particularly **web design and UI development**.
-
-The project can be continued in the future if needed.
-
 > The biggest outcome of this project was not the application itself, but learning how to build, structure, debug, and maintain a full-stack project.
